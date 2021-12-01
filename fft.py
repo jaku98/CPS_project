@@ -5,7 +5,7 @@ import scipy.fftpack as fftpk
 import numpy as np
 from matplotlib import pyplot as plt
 import csv
-#cyce kurwa jak donice
+#cyce kurwa jak donice  i kalafior
 samplerate = 44100
 filename = 'wav\output4.wav'
 
