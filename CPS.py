@@ -5,9 +5,9 @@ import scipy.fftpack as fftpk
 import numpy as np
 from matplotlib import pyplot as plt
 import csv
-
+#cycki
 samplerate = 44100
-filename = 'output4.wav'
+filename = 'wav\output4.wav'
 
 def fft():
     samplerate, mydata = wavfile.read(filename)
@@ -15,7 +15,7 @@ def fft():
     time = np.arange(0,duration,1/samplerate)
     
     # Zapis mydata do .csv
-    with open('data_file.csv', 'w', encoding='utf-8', newline='') as csvfile:
+    with open('exel\data_file.csv', 'w', encoding='utf-8', newline='') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(mydata)
  
