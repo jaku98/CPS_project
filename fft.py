@@ -7,15 +7,15 @@ from matplotlib import pyplot as plt
 import csv
 
 samplerate = 44100
-filename = 'wav\output4.wav'
+filename = 'wav/output3.wav'
 
 def fft():
+    # Wywołanie nagrania i zapis
     samplerate, mydata = wavfile.read(filename)
     duration = len(mydata)/samplerate
-    time = np.arange(0,duration,1/samplerate)
     
     # Zapis mydata do .csv
-    with open('exel\data_file.csv', 'w', encoding='utf-8', newline='') as csvfile:
+    with open('exel\data_file2.csv', 'w') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(mydata)
  
@@ -26,13 +26,16 @@ def fft():
     # Szukanie y dla x dla wykresu
     max_y = max(fft)
     max_x = freqs[fft.argmax()]
-    print(max_x)
+
+    # Oś ox na czas i volt na dB
+    time = np.arange(0,duration,1/samplerate)
+    mydata = 20*np.log10(mydata / 5.0)
 
     # Wykres A(t)[s]
     plt.subplot(2,1,1)
     plt.plot(time, mydata)
     plt.xlabel('Czas [t]')
-    plt.ylabel('Amplituda')
+    plt.ylabel('Amplituda [dB]')
     plt.title('PRZEBIEG CZASOWY')
 
     # Wykres A(f)[Hz]
@@ -44,7 +47,6 @@ def fft():
     plt.xlabel('Częstotliwość (Hz)')
     plt.ylabel('Amplituda')
     plt.title("WIDMO SYGNAŁU")
-    
     plt.tight_layout()
     plt.show()
 
@@ -57,6 +59,7 @@ def check():
         exit()    
 
 INP_0 = int(input(" Nagraj - 1 \n FFT poprzedniego nagrania - 2 \n Odegraj poprzednie nagranie - 3 \n"))
+
 if INP_0 == 1:
     duration = int(input(" Podaj czas nagrywania [s]  "))
     print("     START")
