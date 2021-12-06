@@ -1,3 +1,4 @@
+from numpy.lib.function_base import append
 import sounddevice as sd
 import soundfile as sf
 import scipy.io.wavfile as wavfile
@@ -5,6 +6,7 @@ import scipy.fftpack as fftpk
 import numpy as np
 from matplotlib import pyplot as plt
 import csv
+import signal_envelope as se
 
 samplerate = 44100
 filename = 'wav/output3.wav'
@@ -14,11 +16,6 @@ def fft():
     samplerate, mydata = wavfile.read(filename)
     duration = len(mydata)/samplerate
     
-    # Zapis mydata do .csv
-    with open('exel\data_file2.csv', 'w') as csvfile:
-        csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(mydata)
- 
     # Realizacja FFT
     fft = abs(fftpk.rfft(mydata))
     freqs = fftpk.rfftfreq(len(fft), (1.0/samplerate))
@@ -32,24 +29,45 @@ def fft():
     mydata = 20*np.log10(mydata / 5.0)
 
     # Wykres A(t)[s]
-    plt.subplot(2,1,1)
+    plt.figure('WYKRESY')
+    plt.subplot(3,1,1)
     plt.plot(time, mydata)
     plt.xlabel('Czas [t]')
     plt.ylabel('Amplituda [dB]')
-    plt.title('PRZEBIEG CZASOWY')
+    plt.title('PRZEBIEG CZASOWY A[t]')
 
     # Wykres A(f)[Hz]
-    plt.subplot(2, 1, 2)
+    plt.subplot(3, 1, 2)
     plt.scatter(max_x, max_y, c='r')
     plt.plot(freqs[range(len(fft)//2)], fft[range(len(fft)//2)], '-r')
     plt.legend(["Freq: %2.2f [Hz]" %max_x], loc='upper center' )
     plt.xscale('log')
     plt.xlabel('Częstotliwość (Hz)')
     plt.ylabel('Amplituda')
-    plt.title("WIDMO SYGNAŁU")
+    plt.title("WIDMO SYGNAŁU F[f]")
+     
+    # Obwiednia do wyznaczenia ch-ki kierunkowej
+    W, _ = se.read_wav(filename)
+    X_envelope = se.get_frontiers(W, 1)
+   
+    plt.subplot(3, 1, 3)
+    plt.plot(X_envelope, np.abs(W[X_envelope]), '-g')
+    plt.title("OBWIEDNIA SYGNAŁU A[t]")
     plt.tight_layout()
     plt.show()
 
+    list_abs =[]
+    absx = np.abs(W[X_envelope])
+    absx = list(absx)
+    for x in range(len(absx)):
+        if absx[x] > 150:
+            list_abs.append(absx[x])
+    
+    # Zapis obwiedni do .csv
+    with open('exel\data_file2.csv', 'w') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(list_abs)
+    
 # Sprawdzenie pliku czy jest w folderze
 def check():
     try:
@@ -59,7 +77,6 @@ def check():
         exit()    
 
 INP_0 = int(input(" Nagraj - 1 \n FFT poprzedniego nagrania - 2 \n Odegraj poprzednie nagranie - 3 \n"))
-
 if INP_0 == 1:
     duration = int(input(" Podaj czas nagrywania [s]  "))
     print("     START")
