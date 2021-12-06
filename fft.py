@@ -1,4 +1,4 @@
-from numpy.lib.function_base import append
+#from numpy.lib.function_base import append
 import sounddevice as sd
 import soundfile as sf
 import scipy.io.wavfile as wavfile
@@ -9,7 +9,7 @@ import csv
 import signal_envelope as se
 
 samplerate = 44100
-filename = 'wav/output3.wav'
+filename = 'wav/fileguitar2.wav'
 
 def fft():
     # Wywołanie nagrania i zapis
@@ -29,7 +29,7 @@ def fft():
     mydata = 20*np.log10(mydata / 5.0)
 
     # Wykres A(t)[s]
-    plt.figure('WYKRESY')
+    plt.figure(1)
     plt.subplot(3,1,1)
     plt.plot(time, mydata)
     plt.xlabel('Czas [t]')
@@ -47,33 +47,51 @@ def fft():
     plt.title("WIDMO SYGNAŁU F[f]")
      
     # Obwiednia do wyznaczenia ch-ki kierunkowej
+    # Ch-ka tylko dla nagrania "output3.wav" !!!!
     W, _ = se.read_wav(filename)
     X_envelope = se.get_frontiers(W, 1)
-   
-    plt.subplot(3, 1, 3)
-    plt.plot(X_envelope, np.abs(W[X_envelope]), '-g')
-    plt.title("OBWIEDNIA SYGNAŁU A[t]")
-    plt.tight_layout()
-    plt.show()
-
-    list_abs =[]
+    
+    # Do plotu dla ch-ki
+    os_y =[]
     absx = np.abs(W[X_envelope])
     absx = list(absx)
     for x in range(len(absx)):
         if absx[x] > 150:
-            list_abs.append(absx[x])
+            os_y.append(absx[x])
+    rozm = np.size(os_y)
+
+    krok = 360/rozm
+    os_x = []
+    krok_0 = 0
+    for i in range(rozm):
+        os_x.append(krok_0)
+        krok_0+=krok
     
-    # Zapis obwiedni do .csv
+    plt.subplot(3, 1, 3)
+    plt.plot(X_envelope, np.abs(W[X_envelope]), '-g')
+    plt.title("OBWIEDNIA SYGNAŁU A[t]")
+    plt.ylabel('Amplituda [Pa]')
+    plt.tight_layout()
+    plt.show()
+
+    # PLOT dla Ch-ki [ tylko dla nagrania "output3.wav" ]
+    # plt.figure(2)
+    # plt.plot(os_x, os_y)
+    # plt.title("CH-ka kierunkowa mikrofonu")
+    # plt.xlabel('Kąt [st]')
+    # plt.show()
+
+    # Zapis danych do .csv [ dane do wyboru ]
     with open('exel\data_file2.csv', 'w') as csvfile:
         csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(list_abs)
+        csvwriter.writerow(os_y)
     
-# Sprawdzenie pliku czy jest w folderze
+# Sprawdzenie pliku .wav czy jest w folderze
 def check():
     try:
         samplerate, mydata = wavfile.read(filename)
     except IOError:
-        print("Z pustego i Salomon nie naleje! Nagraj dźwięk :)")
+        print("Z pustego i Salomon nie naleje! Nagraj coś :)")
         exit()    
 
 INP_0 = int(input(" Nagraj - 1 \n FFT poprzedniego nagrania - 2 \n Odegraj poprzednie nagranie - 3 \n"))
