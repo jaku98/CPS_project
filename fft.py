@@ -10,7 +10,7 @@ import signal_envelope as se
 
 samplerate = 44100
 filename = 'wav/fileguitar2.wav'
-
+#RPi
 def fft():
     # Wywołanie nagrania i zapis
     samplerate, mydata = wavfile.read(filename)
