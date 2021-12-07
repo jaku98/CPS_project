@@ -45,26 +45,26 @@ def fft():
     plt.ylabel('Amplituda')
     plt.title("WIDMO SYGNAŁU F[f]")
      
-    # Obwiednia do wyznaczenia ch-ki kierunkowej
+    # Obwiednia do wyznaczenia ch-ki kierunkowej i ch-ka kier
     # Ch-ka tylko dla nagrania "output3.wav" !!!!
     W, _ = se.read_wav(filename)
     X_envelope = se.get_frontiers(W, 1)
     
     # Do plotu dla ch-ki
-    os_y =[]
-    absx = np.abs(W[X_envelope])
-    absx = list(absx)
-    for x in range(len(absx)):
-        if absx[x] > 150:
-            os_y.append(absx[x])
-    rozm = np.size(os_y)
+    # os_y =[]
+    # absx = np.abs(W[X_envelope])
+    # absx = list(absx)
+    # for x in range(len(absx)):
+    #     if absx[x] > 150:
+    #         os_y.append(absx[x])
+    # rozm = np.size(os_y)
 
-    krok = 360/rozm
-    os_x = []
-    krok_0 = 0
-    for i in range(rozm):
-        os_x.append(krok_0)
-        krok_0+=krok
+    # krok = 360/rozm
+    # os_x = []
+    # krok_0 = 0
+    # for i in range(rozm):
+    #     os_x.append(krok_0)
+    #     krok_0+=krok
     
     plt.subplot(3, 1, 3)
     plt.plot(X_envelope, np.abs(W[X_envelope]), '-g')
@@ -83,7 +83,7 @@ def fft():
     # Zapis danych do .csv [ dane do wyboru ]
     with open('exel\data_file2.csv', 'w') as csvfile:
         csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(os_y)
+        csvwriter.writerow(mydata)
     
 # Sprawdzenie pliku .wav czy jest w folderze
 def check():
