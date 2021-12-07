@@ -1,12 +1,11 @@
-#from numpy.lib.function_base import append
+import csv
+import numpy as np
+import scipy.fftpack as fftpk
+import scipy.io.wavfile as wavfile
+import signal_envelope as se
 import sounddevice as sd
 import soundfile as sf
-import scipy.io.wavfile as wavfile
-import scipy.fftpack as fftpk
-import numpy as np
 from matplotlib import pyplot as plt
-import csv
-import signal_envelope as se
 
 samplerate = 44100
 filename = 'wav/fileguitar2.wav'
