@@ -1,11 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "..\\..\\MGR\\work"
-		},
-		{
-			"name": "pygame-menu",
-			"path": "..\\..\\MGR\\pygame-menu\\pygame-menu"
+			"path": "."
 		}
 	],
 	"settings": {}
