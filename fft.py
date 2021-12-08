@@ -3,9 +3,11 @@ import numpy as np
 import scipy.fftpack as fftpk
 import scipy.io.wavfile as wavfile
 import signal_envelope as se
+#from signal_envelope import envelope
 import sounddevice as sd
 import soundfile as sf
 from matplotlib import pyplot as plt
+from scipy.signal import hilbert
 
 samplerate = 44100
 filename = 'wav/fileguitar2.wav'
@@ -18,7 +20,7 @@ def fft():
     # Realizacja FFT
     fft = abs(fftpk.rfft(mydata))
     freqs = fftpk.rfftfreq(len(fft), (1.0/samplerate))
-
+    env_mydata = mydata
     # Szukanie y dla x dla wykresu
     max_y = max(fft)
     max_x = freqs[fft.argmax()]
@@ -44,11 +46,27 @@ def fft():
     plt.xlabel('Częstotliwość (Hz)')
     plt.ylabel('Amplituda')
     plt.title("WIDMO SYGNAŁU F[f]")
-     
+    plt.tight_layout()
+    plt.show() 
+    
+
+    analytic_signal = hilbert(env_mydata)
+    amplitude_envelope = np.abs(analytic_signal)
+    print(env_mydata)
+    print(analytic_signal)
+    print(len(time), 'time')
+    print(len(amplitude_envelope), ' env')
+
+    plt.figure(2)
+    plt.plot(time, amplitude_envelope)
+    plt.title("OBWIEDNIA SYGNAŁU A[t]")
+    plt.ylabel('Amplituda [Pa]')
+    plt.show()
+
     # Obwiednia do wyznaczenia ch-ki kierunkowej i ch-ka kier
     # Ch-ka tylko dla nagrania "output3.wav" !!!!
-    W, _ = se.read_wav(filename)
-    X_envelope = se.get_frontiers(W, 1)
+    # W, _ = se.read_wav(filename)
+    # X_envelope = se.get_frontiers(W, 1)
     
     # Do plotu dla ch-ki
     # os_y =[]
@@ -66,12 +84,12 @@ def fft():
     #     os_x.append(krok_0)
     #     krok_0+=krok
     
-    plt.subplot(3, 1, 3)
-    plt.plot(X_envelope, np.abs(W[X_envelope]), '-g')
-    plt.title("OBWIEDNIA SYGNAŁU A[t]")
-    plt.ylabel('Amplituda [Pa]')
-    plt.tight_layout()
-    plt.show()
+    # plt.subplot(3, 1, 3)
+    # plt.plot(X_envelope, np.abs(W[X_envelope]), '-g')
+    # plt.title("OBWIEDNIA SYGNAŁU A[t]")
+    # plt.ylabel('Amplituda [Pa]')
+    # plt.tight_layout()
+    # plt.show()
 
     # PLOT dla Ch-ki [ tylko dla nagrania "output3.wav" ]
     # plt.figure(2)
