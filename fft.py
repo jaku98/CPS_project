@@ -8,13 +8,13 @@ import soundfile as sf
 from matplotlib import pyplot as plt
 
 samplerate = 44100
-filename = 'wav/output3.wav'
+filename = 'wav/output1.wav'
 
 def fft():
     # Wywołanie nagrania i zapis
     samplerate, mydata = wavfile.read(filename)
     duration = len(mydata)/samplerate
-    
+    print(len(mydata))
     # Realizacja FFT
     fft = abs(fftpk.rfft(mydata))
     freqs = fftpk.rfftfreq(len(fft), (1.0/samplerate))
@@ -81,7 +81,7 @@ def fft():
     plt.show()
 
     # Zapis danych do .csv [ dane do wyboru ]
-    with open('exel\data_file2.csv', 'w') as csvfile:
+    with open('exel\data_file.csv', 'w') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(mydata)
     
